@@ -45,9 +45,9 @@ var ColorPanel = React.createClass({
   render: function() {
     return (
       <div className="color-panel panel">
-        <PanelButton clickHandler={this.props.clickHandler} data='red' />
-        <PanelButton clickHandler={this.props.clickHandler} data='green' />
-        <PanelButton clickHandler={this.props.clickHandler} data='blue' />
+        <PanelButton clickHandler={this.props.clickHandler} data="red" />
+        <PanelButton clickHandler={this.props.clickHandler} data="green" />
+        <PanelButton clickHandler={this.props.clickHandler} data="blue" />
       </div>
     );
   }
@@ -57,9 +57,9 @@ var ValuePanel = React.createClass({
   render: function() {
     return (
       <div className="value-panel panel">
-        <PanelButton clickHandler={this.props.clickHandler} data='bright' />
-        <PanelButton clickHandler={this.props.clickHandler} data='medium' />
-        <PanelButton clickHandler={this.props.clickHandler} data='dark' />
+        <PanelButton clickHandler={this.props.clickHandler} data="bright" />
+        <PanelButton clickHandler={this.props.clickHandler} data="medium" />
+        <PanelButton clickHandler={this.props.clickHandler} data="dark" />
       </div>
     );
   }
