@@ -255,6 +255,41 @@ describe('eventful-react', function() {
       testUtils.Simulate.click(document.querySelector('#item'));
     });
 
+    it('should work with this.props.children', function(done) {
+      var Root = Eventful.createClass({
+        componentDidMount: function() {
+          this.on('event', function(arg) { if (arg === 2) done() });
+        },
+        render: function() {
+          return (
+            <List>
+              <Item />
+              <Item />
+              <Item />
+            </List>
+          );
+        }
+      });
+
+      var List = Eventful.createClass({
+        render: function() {
+          return <div>{this.props.children}</div>; 
+        }
+      });
+
+      var Item = Eventful.createClass({
+        handleClick: function() {
+          this.emit('event',2);
+        },
+        render: function() {
+          return <div id="item" onClick={this.handleClick}>item text</div>;
+        }
+      });
+
+      React.render(<Root />,document.body);
+      testUtils.Simulate.click(document.querySelector('#item'));
+    });
+
   });
 
   describe('.on', function() {
@@ -270,7 +305,7 @@ describe('eventful-react', function() {
 
       var List = Eventful.createClass({
         render: function() {
-          return <div><Item /></div>; 
+          return <div><Item /></div>;
         }
       });
 
