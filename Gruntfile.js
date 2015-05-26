@@ -17,7 +17,7 @@ module.exports = function(grunt) {
     },
     watch: {
       test: {
-        files: ['test/jsx/**/*'],
+        files: ['test/jsx/**/*','lib/**/*'],
         tasks: ['react:test','mochaTest:test']
       }
     }
