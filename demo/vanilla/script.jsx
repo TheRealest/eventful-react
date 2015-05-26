@@ -1,5 +1,3 @@
-var React = require('react');
-
 var Root = React.createClass({
   getInitialState: function() {
     return {
