@@ -1,4 +1,5 @@
 var mocha = require('mocha');
+var sinon = require('sinon');
 var expect = require('chai').expect;
 var jsdom = require('jsdom').jsdom;
 global.document = jsdom();
@@ -8,7 +9,7 @@ global.navigator = window.navigator;
 var React = require('react');
 require('react/addons');
 var testUtils = React.addons.TestUtils;
-var eventful = require('../../eventful-react');
+var Eventful = require('../../eventful-react');
 
 
 describe('jsdom', function() {
@@ -19,11 +20,9 @@ describe('jsdom', function() {
 });
 
 describe('eventful-react', function() {
-  var print = function(t) { return t._reactInternalInstance._rootNodeID; };
-
-  var Root = eventful.createClass({
+  var Root = Eventful.createClass({
     componentDidMount: function() {
-      console.log('old root componentDidMount');
+      // console.log('old root componentDidMount');
     },
     render: function() {
       var children = (
@@ -37,12 +36,9 @@ describe('eventful-react', function() {
     }
   });
 
-  var List = React.createClass({
+  var List = Eventful.createClass({
     clickHandler: function() {
       // console.log('clicked!');
-    },
-    componentDidMount: function() {
-      console.log('list',print(this));
     },
     render: function() {
       var id = 'list-' + this.props.listId;
@@ -55,7 +51,7 @@ describe('eventful-react', function() {
     }
   });
 
-  var Item = React.createClass({
+  var Item = Eventful.createClass({
     getInitialState: function() {
       return {
         count: 0
@@ -63,27 +59,91 @@ describe('eventful-react', function() {
     },
     render: function() {
       var id = 'item-' + this.props.itemId;
-      console.log('id',id);
+      // console.log('id',id);
       return (
         <li className="item" id={id}>{this.state.count}</li>
       );
     }
   });
 
-  beforeEach(function() {
-    React.render(<Root />, window.document.body);
+  describe('getNodeId', function() {
+    var getNodeId = require('../../lib/getNodeId');
+
+    it('should return React\'s interal node ID for given React component', function() {
+      var id;
+      var Test = React.createClass({
+        componentDidMount: function() {
+          id = getNodeId(this);
+          // console.log('id');
+        },
+        render: function() {
+          return <div></div>;
+        }
+      });
+      React.render(<Test />,document.body)
+
+      expect(id).to.be.equal('.0');
+    });
   });
 
-  describe('bootstrapping process', function() {
-    it('should add a .emit method to every component', function() {
-      // console.log('bootstrap:',eventful.bootstrap(Root));
-      // console.log('list contents:',document.querySelector('#list-1').innerHTML);
-      // eventful.bootstrap(Root);
+  describe('parseIdString', function() {
+    var parseIdString = require('../../lib/parseIdString');
+
+    it('should parse a React ID string into an array of IDs', function() {
+      expect(parseIdString('.0.1.1.3')).to.be.eql(['0','1','1','3']);
+    });
+  });
+
+  describe('createClass', function() {
+    var virtualDOM = require('../../lib/virtualDOM');
+
+    it('should not prevent old lifecycle methods from running', function(done) {
+      var Test = Eventful.createClass({
+        componentDidMount: done,
+        render: function() {
+          return <div></div>
+        }
+      });
+
+      React.render(<Test />,document.body);
     });
 
-    it('should add a .on method to every component', function() {
-      testUtils.Simulate.click(document.querySelector('#item-list-1'));
-      // expect().to.be.equal(1);
+    it('should add a call to virtualDOM.registerComponent to componentDidMount', function(done) {
+      var oldRegisterComponent = virtualDOM.registerComponent;
+      virtualDOM.registerComponent = function() { done() };
+
+      var Test = Eventful.createClass({
+        render: function() {
+          return <div></div>
+        }
+      });
+
+      React.render(<Test />,document.body);
+      virtualDOM.registerComponent = oldRegisterComponent;
+    });
+
+    it('should add a .emit function to the component', function() {
+      var Test = Eventful.createClass({
+        componentDidMount: function() {
+          this.emit();
+        },
+        render: function() {
+          return <div></div>;
+        }
+      });
+
+      React.render(<Test />,document.body);
+    });
+
+    it('should add a .on function to the component', function() {
+      var Test = Eventful.createClass({
+        render: function() {
+          this.on();
+          return <div></div>;
+        }
+      });
+
+      React.render(<Test />,document.body);
     });
   });
 });
