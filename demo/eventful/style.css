@@ -1,0 +1,71 @@
+div {
+  box-sizing: border-box;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+}
+
+.viewport {
+  height: 400px;
+  width: 400px;
+  margin-right: 20px;
+  float: left;
+}
+
+.viewport.red.bright {
+  background-color: #f00;
+}
+.viewport.red.medium {
+  background-color: #a00;
+}
+.viewport.red.dark {
+  background-color: #500;
+}
+.viewport.green.bright {
+  background-color: #0f0;
+}
+.viewport.green.medium {
+  background-color: #0a0;
+}
+.viewport.green.dark {
+  background-color: #050;
+}
+.viewport.blue.bright {
+  background-color: #00f;
+}
+.viewport.blue.medium {
+  background-color: #00a;
+}
+.viewport.blue.dark {
+  background-color: #005;
+}
+
+.control-panel {
+  height: 400px;
+  width: 200px;
+  float: left;
+  background-color: #ccc;
+  padding: 20px;
+}
+
+.panel {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.color-panel {
+  background-color: #b90;
+}
+
+.value-panel {
+  background-color: #0bc;
+}
+
+.panel-button {
+  background-color: #e25;
+  padding: 3px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
