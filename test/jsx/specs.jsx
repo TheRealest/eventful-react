@@ -150,6 +150,10 @@ describe('eventful-react', function() {
   describe('virtualDOM', function() {
     var virtualDOM = require('../../lib/virtualDOM');
 
+    beforeEach(function() {
+      virtualDOM.virtualDOM = {};
+    });
+
     describe('registerComponent', function() {
       it('should add a node to the virtual DOM at the appropriate address', function() {
         virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
