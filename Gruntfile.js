@@ -5,13 +5,6 @@ module.exports = function(grunt) {
         files: {
           'test/js/specs.js': 'test/jsx/specs.jsx'
         }
-      },
-      demo: {
-        files: {
-          'demo/vanilla/script.js': 'demo/vanilla/script.jsx',
-          'demo/flux/script.js': 'demo/flux/script.jsx',
-          'demo/eventful/script.js': 'demo/eventful/script.jsx'
-        }
       }
     },
     browserify: {
@@ -22,6 +15,17 @@ module.exports = function(grunt) {
         },
         files: {
           'release/eventful-react.js': 'lib/eventful-react.js'
+        }
+      },
+      demo: {
+        options: {
+          debug: false,
+          transform: ['reactify']
+        },
+        files: {
+          'demo/vanilla/script.js': 'demo/vanilla/script.jsx',
+          'demo/flux/script.js': 'demo/flux/script.jsx',
+          'demo/eventful/script.js': 'demo/eventful/script.jsx'
         }
       }
     },
@@ -40,7 +44,7 @@ module.exports = function(grunt) {
       },
       demo: {
         files: ['demo/**/*.jsx'],
-        tasks: ['react:demo']
+        tasks: ['browserify:demo']
       }
     }
   });
