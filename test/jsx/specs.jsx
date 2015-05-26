@@ -146,4 +146,113 @@ describe('eventful-react', function() {
       React.render(<Test />,document.body);
     });
   });
+
+  describe('virtualDOM', function() {
+    var virtualDOM = require('../../lib/virtualDOM');
+
+    describe('registerComponent', function() {
+      it('should add a node to the virtual DOM at the appropriate address', function() {
+        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
+        expect(virtualDOM.virtualDOM[0][1]).to.not.be.null;
+      });
+
+      it('should correctly set the parent property', function() {
+        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
+        expect(virtualDOM.virtualDOM[0][1].parent).to.equal(virtualDOM.virtualDOM[0]);
+      });
+
+      it('should set up parent property of already created children', function() {
+        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
+        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0'}});
+        expect(virtualDOM.virtualDOM[0][1].parent).to.eql(virtualDOM.virtualDOM[0]);
+      });
+
+      it('should create a CallbackStore for the given address', function() {
+        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
+        expect(virtualDOM.virtualDOM[0][1].callbackStore).to.not.be.null;
+      });
+    });
+
+    describe('resolveEvent', function() {
+
+    });
+
+    describe('registerCallback', function() {
+
+    });
+  });
+
+  describe('callbackStore', function() {
+    describe('registerCallback', function() {
+
+    });
+
+    describe('respondToEvent', function() {
+
+    });
+  });
+
+  xdescribe('.emit', function() {
+    it('should call registered callbacks on any ancestor component', function(done) {
+      var Root = Eventful.createClass({
+        componentDidMount: function() {
+          this.on('event', function() { done() });
+        },
+        render: function() {
+          return <div><List /></div>;
+        }
+      });
+
+      var List = Eventful.createClass({
+        render: function() {
+          return <div><Item /></div>; 
+        }
+      });
+
+      var Item = Eventful.createClass({
+        handleClick: function() {
+          console.log('clicked');
+          this.emit('event');
+        },
+        render: function() {
+          return <div id="item" onClick={this.handleClick}>item text</div>;
+        }
+      });
+
+      React.render(<Root />,document.body);
+      testUtils.Simulate.click(document.querySelector('#item'));
+    });
+  });
+
+  xdescribe('.on', function() {
+    it('should register a callback that can be triggered by any descendant component', function(done) {
+      var Root = Eventful.createClass({
+        componentDidMount: function() {
+          this.on('event', function() { done() });
+        },
+        render: function() {
+          return <div><List /></div>;
+        }
+      });
+
+      var List = Eventful.createClass({
+        render: function() {
+          return <div><Item /></div>; 
+        }
+      });
+
+      var Item = Eventful.createClass({
+        handleClick: function() {
+          console.log('clicked');
+          this.emit('event');
+        },
+        render: function() {
+          return <div id="item" onClick={this.handleClick}>item text</div>;
+        }
+      });
+
+      React.render(<Root />,document.body);
+      testUtils.Simulate.click(document.querySelector('#item'));
+    });
+  });
 });
