@@ -9,7 +9,7 @@ global.navigator = window.navigator;
 var React = require('react');
 require('react/addons');
 var testUtils = React.addons.TestUtils;
-var Eventful = require('../../eventful-react');
+var Eventful = require('../../lib/eventful-react');
 
 
 describe('jsdom', function() {
