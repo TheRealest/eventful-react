@@ -5,6 +5,13 @@ module.exports = function(grunt) {
         files: {
           'test/js/specs.js': 'test/jsx/specs.jsx'
         }
+      },
+      demo: {
+        files: {
+          'demo/vanilla/script.js': 'demo/vanilla/script.jsx',
+          'demo/flux/script.js': 'demo/flux/script.jsx',
+          'demo/eventful/script.js': 'demo/eventful/script.jsx'
+        }
       }
     },
     browserify: {
@@ -30,6 +37,10 @@ module.exports = function(grunt) {
       test: {
         files: ['test/jsx/**/*','lib/**/*'],
         tasks: ['react:test','mochaTest:test']
+      },
+      demo: {
+        files: ['demo/**/*.jsx'],
+        tasks: ['react:demo']
       }
     }
   });
@@ -40,5 +51,6 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('test',['watch:test']);
+  grunt.registerTask('demo',['watch:demo']);
   grunt.registerTask('release',['browserify:release']);
 };
