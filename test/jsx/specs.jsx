@@ -86,14 +86,6 @@ describe('eventful-react', function() {
     });
   });
 
-  describe('parseIdString', function() {
-    var parseIdString = require('../../lib/parseIdString');
-
-    it('should parse a React ID string into an array of IDs', function() {
-      expect(parseIdString('.0.1.1.3')).to.be.eql(['0','1','1','3']);
-    });
-  });
-
   describe('createClass', function() {
     var virtualDOM = require('../../lib/virtualDOM');
 
@@ -125,7 +117,7 @@ describe('eventful-react', function() {
     it('should add a .emit function to the component', function() {
       var Test = Eventful.createClass({
         componentDidMount: function() {
-          this.emit();
+          this.emit('event','arg');
         },
         render: function() {
           return <div></div>;
@@ -137,8 +129,10 @@ describe('eventful-react', function() {
 
     it('should add a .on function to the component', function() {
       var Test = Eventful.createClass({
+        componentDidMount: function() {
+          this.on('event',function callback(){});
+        },
         render: function() {
-          this.on();
           return <div></div>;
         }
       });
@@ -157,23 +151,29 @@ describe('eventful-react', function() {
     describe('registerComponent', function() {
       it('should add a node to the virtual DOM at the appropriate address', function() {
         virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
-        expect(virtualDOM.virtualDOM[0][1]).to.not.be.null;
-      });
-
-      it('should correctly set the parent property', function() {
-        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
-        expect(virtualDOM.virtualDOM[0][1].parent).to.equal(virtualDOM.virtualDOM[0]);
-      });
-
-      it('should set up parent property of already created children', function() {
-        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
-        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0'}});
-        expect(virtualDOM.virtualDOM[0][1].parent).to.eql(virtualDOM.virtualDOM[0]);
+        expect(virtualDOM.getVirtualNode(['0','1'])).to.not.be.null;
+        // expect(virtualDOM.getVirtualNode(virtualDOM.getParentAddress(['0','1']))).to.not.be.null;
       });
 
       it('should create a CallbackStore for the given address', function() {
         virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
-        expect(virtualDOM.virtualDOM[0][1].callbackStore).to.not.be.null;
+        expect(virtualDOM.getVirtualNode(['0','1']).callbackStore).to.not.be.null;
+      });
+    });
+
+    describe('unregisterComponent', function() {
+      it('should remove a node and all its children from the virtual DOM at the appropriate address', function() {
+        virtualDOM.registerComponent({_reactInternalInstance:{_rootNodeID:'.0.1'}});
+        expect(virtualDOM.getVirtualNode(['0','1'])).to.not.be.null;
+        virtualDOM.unregisterComponent({_reactInternalInstance:{_rootNodeID:'.0'}});
+        expect(virtualDOM.getVirtualNode(['0','1'])).to.be.undefined;
+        expect(virtualDOM.getVirtualNode(['0'])).to.be.undefined;
+      });
+    });
+
+    describe('parseIdString', function() {
+      it('should parse a React ID string into an array of IDs', function() {
+        expect(virtualDOM.parseIdString('.0.1.1.3')).to.be.eql(['0','1','1','3']);
       });
     });
 
@@ -196,7 +196,7 @@ describe('eventful-react', function() {
     });
   });
 
-  xdescribe('.emit', function() {
+  describe('.emit', function() {
     it('should call registered callbacks on any ancestor component', function(done) {
       var Root = Eventful.createClass({
         componentDidMount: function() {
@@ -215,7 +215,6 @@ describe('eventful-react', function() {
 
       var Item = Eventful.createClass({
         handleClick: function() {
-          console.log('clicked');
           this.emit('event');
         },
         render: function() {
@@ -226,9 +225,39 @@ describe('eventful-react', function() {
       React.render(<Root />,document.body);
       testUtils.Simulate.click(document.querySelector('#item'));
     });
+
+    it('should pass args to event handlers', function(done) {
+      var Root = Eventful.createClass({
+        componentDidMount: function() {
+          this.on('event', function(arg) { if (arg === 2) done() });
+        },
+        render: function() {
+          return <div><List /></div>;
+        }
+      });
+
+      var List = Eventful.createClass({
+        render: function() {
+          return <div><Item /></div>; 
+        }
+      });
+
+      var Item = Eventful.createClass({
+        handleClick: function() {
+          this.emit('event',2);
+        },
+        render: function() {
+          return <div id="item" onClick={this.handleClick}>item text</div>;
+        }
+      });
+
+      React.render(<Root />,document.body);
+      testUtils.Simulate.click(document.querySelector('#item'));
+    });
+
   });
 
-  xdescribe('.on', function() {
+  describe('.on', function() {
     it('should register a callback that can be triggered by any descendant component', function(done) {
       var Root = Eventful.createClass({
         componentDidMount: function() {
@@ -247,7 +276,6 @@ describe('eventful-react', function() {
 
       var Item = Eventful.createClass({
         handleClick: function() {
-          console.log('clicked');
           this.emit('event');
         },
         render: function() {
