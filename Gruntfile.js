@@ -5,6 +5,12 @@ module.exports = function(grunt) {
         files: {
           'test/js/specs.js': 'test/jsx/specs.jsx'
         }
+      },
+      demo: {
+        files: {
+          'demo/vanilla/script.js': 'demo/vanilla/script.jsx',
+          'demo/eventful/script.js': 'demo/eventful/script.jsx'
+        }
       }
     },
     browserify: {
@@ -15,17 +21,6 @@ module.exports = function(grunt) {
         },
         files: {
           'release/eventful-react.js': 'lib/eventful-react.js'
-        }
-      },
-      demo: {
-        options: {
-          debug: false,
-          transform: ['reactify']
-        },
-        files: {
-          'demo/vanilla/script.js': 'demo/vanilla/script.jsx',
-          'demo/flux/script.js': 'demo/flux/script.jsx',
-          'demo/eventful/script.js': 'demo/eventful/script.jsx'
         }
       }
     },
@@ -55,6 +50,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('test',['watch:test']);
-  grunt.registerTask('demo',['watch:demo']);
+  grunt.registerTask('demo',['react:demo']);
+  grunt.registerTask('demo:watch',['watch:demo']);
   grunt.registerTask('release',['browserify:release']);
 };
