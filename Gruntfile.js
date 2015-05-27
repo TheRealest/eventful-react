@@ -27,7 +27,7 @@ module.exports = function(grunt) {
     mochaTest: {
       test: {
         options: {
-          reporter: 'spec', 
+          reporter: 'spec',
         },
         src: ['test/js/specs.js']
       }
@@ -39,7 +39,7 @@ module.exports = function(grunt) {
       },
       demo: {
         files: ['demo/**/*.jsx'],
-        tasks: ['browserify:demo']
+        tasks: ['react:demo']
       }
     }
   });
@@ -49,7 +49,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-browserify');
 
-  grunt.registerTask('test',['watch:test']);
+  grunt.registerTask('test',['react:test','mochaTest:test']);
+  grunt.registerTask('test:watch',['watch:test']);
   grunt.registerTask('demo',['react:demo']);
   grunt.registerTask('demo:watch',['watch:demo']);
   grunt.registerTask('release',['browserify:release']);
