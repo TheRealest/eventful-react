@@ -3,7 +3,7 @@ var Root = Eventful.createClass({
     return {
       color: 'blue',
       value: 'dark'
-    }
+    };
   },
   componentDidMount: function() {
     this.on('color',this.colorClickHandler);

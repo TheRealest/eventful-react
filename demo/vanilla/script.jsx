@@ -3,7 +3,7 @@ var Root = React.createClass({
     return {
       color: 'blue',
       value: 'dark'
-    }
+    };
   },
   colorClickHandler: function(color) {
     this.setState({color: color});
