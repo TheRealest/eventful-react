@@ -7,6 +7,17 @@ module.exports = function(grunt) {
         }
       }
     },
+    browserify: {
+      release: {
+        options: {
+          debug: false,
+          transform: ['reactify']
+        },
+        files: {
+          'release/eventful-react.js': 'lib/eventful-react.js'
+        }
+      }
+    },
     mochaTest: {
       test: {
         options: {
@@ -26,4 +37,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-react');
   grunt.loadNpmTasks('grunt-mocha-test');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-browserify');
+
+  grunt.registerTask('test',['watch:test']);
+  grunt.registerTask('release',['browserify:release']);
 };
