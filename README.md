@@ -6,7 +6,7 @@ A library for adding Backbone style events to React components.
 2. [How it works](#how-it-works)
 3. [The problem](#the-problem)
 4. [How `eventful-react` solves the problem](#how-eventful-react-solves-the-problem)
-5. [How to build](#how-to-build)
+5. [How to build for contributions](#how-to-build-for-contributions)
 6. [How to include](#how-to-include)
 7. [How to contribute](#how-to-contribute)
 8. [More info](#more-info)
