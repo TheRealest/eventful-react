@@ -1,1 +1,1 @@
-module.exports = require('lib/eventful-react');
+module.exports = require('./lib/eventful-react');
