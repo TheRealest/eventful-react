@@ -7,8 +7,9 @@ A library for adding Backbone style events to React components.
 3. [The problem](#the-problem)
 4. [How `eventful-react` solves the problem](#how-eventful-react-solves-the-problem)
 5. [How to build](#how-to-build)
-5. [How to include](#how-to-include)
-6. [How to contribute](#how-to-contribute)
+6. [How to include](#how-to-include)
+7. [How to contribute](#how-to-contribute)
+8. [More info](#more-info)
 
 ### Summary
 
@@ -65,6 +66,8 @@ var Child = Eventful.createClass({
 React.render(<Root />, document.body);
 ```
 
+Note you still need to include the line `var React = require('react')` in every component file because the JSX in your render functions uses React to build up your components.
+
 ### The problem
 
 React is based on a strict, one-way flow of information from parent to children, but sometimes we need event data to flow the opposite direction to allow otherwise unrelated components to respond to each other. In vanilla React we can explicitly pass a handler function to a child component in the render function, but for deeply nested children we would need to pass handlers down through a tree of intermediate components which don't care about the event nor the handler. You can add Flux to the mix to process events, but for some projects setting up a dispatcher, actions, and stores is overkill.
@@ -75,7 +78,7 @@ React is based on a strict, one-way flow of information from parent to children,
 
 `eventful-react` keeps a virtual DOM which mirrors React's virtual DOM, updating it as components are rendered or removed. Your handler functions stay in the component that is responding to the event, instead of being passed down the tree to where the event is emitted, and components don't have to worry about whether their parent passed them a handler, or if their children are expecting one.
 
-### How to build
+### How to build for contributions
 
 After first cloning the repo make sure to run:
 
@@ -105,9 +108,13 @@ grunt release
 
 ### How to include
 
-You can either include `release/eventful-react.js` in a script tag and use the global `Eventful` object, or `require('lib/eventful-react.js')` in your code.
+Add `eventful` to your project by running `npm install --save eventful-react`. You can then simply `require('eventful-react')` in your component files to start using `eventful`.
 
 ### How to contribute
 
 Feel free to submit issues or pull-requests for fixes, new features, or just discussion on improvements to `eventful`.
+
+### More info
+
+I wrote a blog post about `eventful` here: [eventful-react brings Backbone style events to React](http://therealest.github.io/eventful-react-brings-backbone-style-events-to-react/).
 
