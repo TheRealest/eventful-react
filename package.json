@@ -1,6 +1,6 @@
 {
   "name": "eventful-react",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A library for adding Backbone style events to React components",
   "main": "eventful-react.js",
   "dependencies": {
