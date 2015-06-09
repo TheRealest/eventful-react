@@ -9,7 +9,7 @@ global.navigator = window.navigator;
 var React = require('react');
 require('react/addons');
 var testUtils = React.addons.TestUtils;
-var Eventful = require('../../lib/eventful-react');
+var Eventful = require('../../eventful-react');
 
 
 describe('jsdom', function() {
@@ -304,6 +304,33 @@ describe('eventful-react', function() {
       });
 
       var List = Eventful.createClass({
+        render: function() {
+          return <div><Item /></div>;
+        }
+      });
+
+      var Item = Eventful.createClass({
+        handleClick: function() {
+          this.emit('event');
+        },
+        render: function() {
+          return <div id="item" onClick={this.handleClick}>item text</div>;
+        }
+      });
+
+      React.render(<Root />,document.body);
+      testUtils.Simulate.click(document.querySelector('#item'));
+    });
+
+    it('should autobind the callback to the context where the listener was defined', function(done) {
+      var Root = Eventful.createClass({
+        componentDidMount: function() {
+          var self = this;
+          this.on('event', function() {
+            expect(this).to.equal(self);
+            done()
+          });
+        },
         render: function() {
           return <div><Item /></div>;
         }

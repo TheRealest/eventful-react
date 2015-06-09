@@ -36,7 +36,7 @@ var Child = Eventful.createClass({
 React.render(<Root />, document.body);
 ```
 
-Callbacks are registered with `.on` by passing in an event name and a function. Keep in mind any arguments passed in to `.emit` will be passed into your callback function. You can register callbacks any time after a component mounts, meaning in the `componentDidMount` method or later (otherwise `eventful` doesn't know where your component is rendered in the DOM). Don't worry about unregistering callbacks; `eventful` will destroy your callback store on unmount.
+Callbacks are registered with `.on` by passing in an event name and a function. Keep in mind any arguments passed in to `.emit` will be passed into your callback function, and callbacks have their `this` context automatically bound to the component instance where they are registered, like all other React component methods. You can register callbacks any time after a component mounts, usually in the `componentDidMount` method (otherwise `eventful` doesn't know where your component is rendered in the DOM). Don't worry about unregistering callbacks; `eventful` will destroy your callback store on unmount.
 
 ```js
 var React = require('react');
@@ -45,6 +45,7 @@ var Eventful = require('eventful-react');
 var Root = Eventful.createClass({
   componentDidMount: function() {
     this.on('event', function(arg) {
+      this.setState({ data: arg });
       console.log('Caught event in root with arg:',arg);
     });
   },
